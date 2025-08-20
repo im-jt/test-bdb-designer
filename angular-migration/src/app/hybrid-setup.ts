@@ -1,51 +1,38 @@
-import { NgModule, forwardRef } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { UpgradeModule } from '@angular/upgrade/static';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 // Angular Services
 import { DesignerService } from './services/designer.service';
 import { AuthService } from './services/auth.service';
-import { HttpService } from './services/http.service';
+import { ThemeService } from './services/theme.service';
 
-// Angular Components
+// Angular Components (Standalone components don't need to be declared)
 import { AppComponent } from './app.component';
-import { DesignerComponent } from './components/designer/designer.component';
-import { MainMenuComponent } from './components/main-menu/main-menu.component';
-import { PropertyPanelComponent } from './components/property-panel/property-panel.component';
 
 // Routes
 import { routes } from './app.routes';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    DesignerComponent,
-    MainMenuComponent,
-    PropertyPanelComponent
+    // Only declare non-standalone components here
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
-    RouterModule.forRoot(routes),
-    UpgradeModule
+    RouterModule.forRoot(routes, { enableTracing: false }),
+    AppComponent // Import the standalone app component
   ],
   providers: [
     DesignerService,
     AuthService,
-    HttpService
-  ],
-  bootstrap: [AppComponent]
+    ThemeService
+  ]
 })
-export class AppModule {
-  constructor(private upgrade: UpgradeModule) {}
-
-  ngDoBootstrap() {
-    // Bootstrap AngularJS app
-    this.upgrade.bootstrap(document.body, ['designer'], { strictDi: true });
-  }
-}
+export class AppModule {}
 
 // Factory for downgrading Angular services to AngularJS
 export function downgradeService(serviceClass: any, name: string) {

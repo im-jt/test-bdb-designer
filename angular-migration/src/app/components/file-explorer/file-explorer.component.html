@@ -1,0 +1,88 @@
+<div class="file-explorer">
+  <div class="explorer-header">
+    <h3>File Explorer</h3>
+    <button mat-icon-button (click)="refreshFiles()" [disabled]="isLoading">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
+  
+  <div class="explorer-toolbar">
+    <button mat-stroked-button (click)="createNewFile()" [disabled]="isLoading">
+      <mat-icon>add</mat-icon>
+      New File
+    </button>
+    <button mat-stroked-button (click)="createNewFolder()" [disabled]="isLoading">
+      <mat-icon>create_new_folder</mat-icon>
+      New Folder
+    </button>
+  </div>
+  
+  <div class="explorer-content" *ngIf="!isLoading; else loadingTemplate">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+        <button mat-icon-button disabled></button>
+        <mat-icon class="file-icon">{{ node.type === 'file' ? 'description' : 'folder' }}</mat-icon>
+        <span class="file-name" (click)="selectFile(node)" [class.selected]="selectedFile?.id === node.id">
+          {{ node.name }}
+        </span>
+        <button mat-icon-button [matMenuTriggerFor]="fileMenu" (click)="setContextNode(node)">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+      </mat-tree-node>
+      
+      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+          </mat-icon>
+        </button>
+        <mat-icon class="folder-icon">folder</mat-icon>
+        <span class="folder-name" (click)="selectFile(node)" [class.selected]="selectedFile?.id === node.id">
+          {{ node.name }}
+        </span>
+        <button mat-icon-button [matMenuTriggerFor]="folderMenu" (click)="setContextNode(node)">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+      </mat-tree-node>
+    </mat-tree>
+  </div>
+  
+  <ng-template #loadingTemplate>
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading files...</p>
+    </div>
+  </ng-template>
+</div>
+
+<!-- File context menu -->
+<mat-menu #fileMenu="matMenu">
+  <button mat-menu-item (click)="openFile(contextNode)">
+    <mat-icon>open_in_new</mat-icon>
+    <span>Open</span>
+  </button>
+  <button mat-menu-item (click)="renameFile(contextNode)">
+    <mat-icon>edit</mat-icon>
+    <span>Rename</span>
+  </button>
+  <button mat-menu-item (click)="deleteFile(contextNode)" class="danger">
+    <mat-icon>delete</mat-icon>
+    <span>Delete</span>
+  </button>
+</mat-menu>
+
+<!-- Folder context menu -->
+<mat-menu #folderMenu="matMenu">
+  <button mat-menu-item (click)="openFolder(contextNode)">
+    <mat-icon>folder_open</mat-icon>
+    <span>Open</span>
+  </button>
+  <button mat-menu-item (click)="renameFile(contextNode)">
+    <mat-icon>edit</mat-icon>
+    <span>Rename</span>
+  </button>
+  <button mat-menu-item (click)="deleteFile(contextNode)" class="danger">
+    <mat-icon>delete</mat-icon>
+    <span>Delete</span>
+  </button>
+</mat-menu>

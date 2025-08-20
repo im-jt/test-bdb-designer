@@ -1,0 +1,166 @@
+.app-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  z-index: 1000;
+}
+
+.app-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  position: relative;
+}
+
+.sidebar {
+  width: 250px;
+  background: white;
+  border-right: 1px solid #e0e0e0;
+  z-index: 100;
+  
+  &.collapsed {
+    width: 0;
+    overflow: hidden;
+  }
+}
+
+.property-panel {
+  width: 300px;
+  background: white;
+  border-left: 1px solid #e0e0e0;
+  z-index: 100;
+  
+  &.collapsed {
+    width: 0;
+    overflow: hidden;
+  }
+}
+
+.designer-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  
+  mat-spinner {
+    margin-right: 16px;
+  }
+}
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #f44336;
+  
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+  }
+  
+  p {
+    text-align: center;
+    max-width: 400px;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .app-content {
+    flex-direction: column;
+  }
+  
+  .sidebar,
+  .property-panel {
+    position: fixed;
+    height: calc(100vh - 56px);
+    top: 56px;
+    z-index: 1000;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    
+    &.collapsed {
+      transform: translateX(-100%);
+      width: 250px;
+    }
+  }
+  
+  .property-panel {
+    right: 0;
+    
+    &.collapsed {
+      transform: translateX(100%);
+      width: 300px;
+    }
+  }
+  
+  .main-content {
+    width: 100%;
+  }
+}
+
+// Dark theme support
+.dark-theme {
+  .app-container {
+    background: #121212;
+    color: white;
+  }
+  
+  .sidebar,
+  .property-panel {
+    background: #1e1e1e;
+    border-color: #333;
+  }
+  
+  .designer-area {
+    background: #121212;
+  }
+}
+
+// Animation transitions
+.sidebar,
+.property-panel {
+  transition: width 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+// Focus and accessibility
+.app-container:focus-within {
+  .sidebar,
+  .property-panel {
+    &.collapsed {
+      opacity: 0.7;
+    }
+  }
+}
+
+// Print styles
+@media print {
+  .app-header,
+  .sidebar,
+  .property-panel {
+    display: none;
+  }
+  
+  .main-content {
+    width: 100%;
+    height: auto;
+  }
+}

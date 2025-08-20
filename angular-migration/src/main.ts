@@ -1,18 +1,18 @@
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { AppModule } from './app/hybrid-setup';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+import { provideRouter } from '@angular/router';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideHttpClient } from '@angular/common/http';
+import { routes } from './app/app.routes';
 
-// Import AngularJS dependencies for hybrid mode
-import 'angular';
-import 'angular-route';
-import 'angular-translate';
-import 'angular-notify';
-
-// Import legacy AngularJS modules
-import './legacy/designer.module';
-
-// Bootstrap the Angular application
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error('Error starting Angular application:', err));
+// Bootstrap the Angular application with standalone components
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRouter(routes),
+    provideAnimations(),
+    provideHttpClient()
+  ]
+}).catch(err => console.error('Error starting Angular application:', err));
 
 // Initialize global variables for legacy compatibility
 (window as any).dGlobals = {

@@ -1,0 +1,179 @@
+<div class="designer-container">
+  <!-- Designer Toolbar -->
+  <mat-toolbar class="designer-toolbar" color="primary">
+    <div class="toolbar-section">
+      <button mat-icon-button (click)="toggleTool('select')" [class.active]="selectedTool === 'select'">
+        <mat-icon>near_me</mat-icon>
+      </button>
+      <button mat-icon-button (click)="toggleTool('pan')" [class.active]="selectedTool === 'pan'">
+        <mat-icon>pan_tool</mat-icon>
+      </button>
+      <button mat-icon-button (click)="toggleTool('zoom')" [class.active]="selectedTool === 'zoom'">
+        <mat-icon>zoom_in</mat-icon>
+      </button>
+    </div>
+    
+    <div class="toolbar-section">
+      <button mat-icon-button (click)="addShape('rectangle')" matTooltip="Add Rectangle">
+        <mat-icon>crop_square</mat-icon>
+      </button>
+      <button mat-icon-button (click)="addShape('circle')" matTooltip="Add Circle">
+        <mat-icon>radio_button_unchecked</mat-icon>
+      </button>
+      <button mat-icon-button (click)="addShape('text')" matTooltip="Add Text">
+        <mat-icon>text_fields</mat-icon>
+      </button>
+      <button mat-icon-button (click)="addShape('image')" matTooltip="Add Image">
+        <mat-icon>image</mat-icon>
+      </button>
+    </div>
+    
+    <div class="toolbar-section">
+      <button mat-icon-button (click)="undo()" [disabled]="!canUndo" matTooltip="Undo">
+        <mat-icon>undo</mat-icon>
+      </button>
+      <button mat-icon-button (click)="redo()" [disabled]="!canRedo" matTooltip="Redo">
+        <mat-icon>redo</mat-icon>
+      </button>
+    </div>
+    
+    <div class="toolbar-section">
+      <span class="zoom-level">{{ (zoomLevel * 100) | number:'1.0-0' }}%</span>
+      <button mat-icon-button (click)="zoomIn()" matTooltip="Zoom In">
+        <mat-icon>zoom_in</mat-icon>
+      </button>
+      <button mat-icon-button (click)="zoomOut()" matTooltip="Zoom Out">
+        <mat-icon>zoom_out</mat-icon>
+      </button>
+      <button mat-icon-button (click)="resetZoom()" matTooltip="Reset Zoom">
+        <mat-icon>center_focus_strong</mat-icon>
+      </button>
+    </div>
+    
+    <div class="toolbar-section ml-auto">
+      <button mat-icon-button [matMenuTriggerFor]="viewMenu" matTooltip="View Options">
+        <mat-icon>visibility</mat-icon>
+      </button>
+      <button mat-icon-button (click)="toggleGrid()" [class.active]="showGrid" matTooltip="Toggle Grid">
+        <mat-icon>grid_on</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar>
+  
+  <!-- Designer Canvas -->
+  <div class="designer-canvas-container">
+    <div class="designer-canvas" 
+         #canvas
+         [style.width.px]="canvasConfig.width"
+         [style.height.px]="canvasConfig.height"
+         [style.transform]="'scale(' + zoomLevel + ')'"
+         (mousedown)="onCanvasMouseDown($event)"
+         (mousemove)="onCanvasMouseMove($event)"
+         (mouseup)="onCanvasMouseUp($event)"
+         (wheel)="onCanvasWheel($event)">
+      
+      <!-- Grid -->
+      <div class="grid-overlay" *ngIf="showGrid" 
+           [style.background-size.px]="gridSize + ' ' + gridSize">
+      </div>
+      
+      <!-- Canvas Objects -->
+      <div *ngFor="let obj of canvasObjects; trackBy: trackByObjectId"
+           class="canvas-object"
+           [class.selected]="obj.selected"
+           [style.left.px]="obj.x"
+           [style.top.px]="obj.y"
+           [style.width.px]="obj.width"
+           [style.height.px]="obj.height"
+           (mousedown)="onObjectMouseDown($event, obj)"
+           (click)="selectObject(obj)">
+        
+        <!-- Rectangle -->
+        <div *ngIf="obj.type === 'rectangle'" 
+             class="shape-rectangle"
+             [style.background-color]="obj.properties.fillColor || '#ffffff'"
+             [style.border]="'2px solid ' + (obj.properties.strokeColor || '#000000')">
+        </div>
+        
+        <!-- Circle -->
+        <div *ngIf="obj.type === 'circle'" 
+             class="shape-circle"
+             [style.background-color]="obj.properties.fillColor || '#ffffff'"
+             [style.border]="'2px solid ' + (obj.properties.strokeColor || '#000000')">
+        </div>
+        
+        <!-- Text -->
+        <div *ngIf="obj.type === 'text'" 
+             class="shape-text"
+             [style.font-size.px]="obj.properties.fontSize || 14"
+             [style.color]="obj.properties.textColor || '#000000'"
+             [style.font-family]="obj.properties.fontFamily || 'Arial'"
+             contenteditable="true"
+             (blur)="updateTextContent(obj, $event)">
+          {{ obj.properties.text || 'Text' }}
+        </div>
+        
+        <!-- Image -->
+        <img *ngIf="obj.type === 'image'" 
+             class="shape-image"
+             [src]="obj.properties.src || '/assets/placeholder.png'"
+             [alt]="obj.properties.alt || 'Image'"
+             (error)="onImageError($event, obj)">
+        
+        <!-- Selection Handles -->
+        <div *ngIf="obj.selected" class="selection-handles">
+          <div class="handle handle-nw" (mousedown)="startResize($event, obj, 'nw')"></div>
+          <div class="handle handle-ne" (mousedown)="startResize($event, obj, 'ne')"></div>
+          <div class="handle handle-sw" (mousedown)="startResize($event, obj, 'sw')"></div>
+          <div class="handle handle-se" (mousedown)="startResize($event, obj, 'se')"></div>
+          <div class="handle handle-n" (mousedown)="startResize($event, obj, 'n')"></div>
+          <div class="handle handle-s" (mousedown)="startResize($event, obj, 's')"></div>
+          <div class="handle handle-w" (mousedown)="startResize($event, obj, 'w')"></div>
+          <div class="handle handle-e" (mousedown)="startResize($event, obj, 'e')"></div>
+        </div>
+      </div>
+      
+      <!-- Selection Rectangle -->
+      <div *ngIf="selectionRectangle" 
+           class="selection-rectangle"
+           [style.left.px]="selectionRectangle.x"
+           [style.top.px]="selectionRectangle.y"
+           [style.width.px]="selectionRectangle.width"
+           [style.height.px]="selectionRectangle.height">
+      </div>
+    </div>
+  </div>
+  
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span>Objects: {{ canvasObjects.length }}</span>
+    <span>Selected: {{ selectedObjects.length }}</span>
+    <span>Canvas: {{ canvasConfig.width }}x{{ canvasConfig.height }}</span>
+    <span>Mouse: {{ mousePosition.x }}, {{ mousePosition.y }}</span>
+  </div>
+</div>
+
+<!-- View Menu -->
+<mat-menu #viewMenu="matMenu">
+  <button mat-menu-item (click)="fitToWindow()">
+    <mat-icon>fit_screen</mat-icon>
+    <span>Fit to Window</span>
+  </button>
+  <button mat-menu-item (click)="actualSize()">
+    <mat-icon>photo_size_select_actual</mat-icon>
+    <span>Actual Size</span>
+  </button>
+  <mat-divider></mat-divider>
+  <button mat-menu-item (click)="toggleRulers()">
+    <mat-icon>straighten</mat-icon>
+    <span>Show Rulers</span>
+  </button>
+  <button mat-menu-item (click)="toggleGrid()">
+    <mat-icon>grid_on</mat-icon>
+    <span>Show Grid</span>
+  </button>
+  <button mat-menu-item (click)="toggleSnapToGrid()">
+    <mat-icon>apps</mat-icon>
+    <span>Snap to Grid</span>
+  </button>
+</mat-menu>

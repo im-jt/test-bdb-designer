@@ -9,7 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
-import { MatColorPickerModule } from '@angular/material/color-picker';
+// Note: Angular Material doesn't have a color picker module, using custom implementation
 
 import { DesignerService } from '../../services/designer.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -41,7 +41,7 @@ export interface PropertyConfig {
     MatIconModule,
     MatSlideToggleModule,
     MatSliderModule,
-    MatColorPickerModule
+    // MatColorPickerModule - using custom color picker
   ],
   templateUrl: './property-panel.component.html',
   styleUrls: ['./property-panel.component.scss']
