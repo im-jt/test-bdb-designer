@@ -1,0 +1,120 @@
+<!-- Main Menu Component - Based on original header user menu section -->
+<div class="main-menu-container">
+
+  <!-- User Navigation Menu -->
+  <div class="user-menu-navigation cursor-hand">
+    <div class="dropdown">
+      <div (click)="toggleUserNavigation()">
+        <svg width="18px" height="18px" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" 
+                d="M12.6985 11.2269H16.6743V14.9543H12.6985V11.2269ZM6.73473 11.2269H10.7106V14.9543H6.73473V11.2269ZM0.770996 11.2269H4.74682V14.9543H0.770996V11.2269ZM12.6985 5.63593H16.6743V9.36326H12.6985V5.63593ZM6.73473 5.63593H10.7106V9.36326H6.73473V5.63593ZM0.770996 5.63593H4.74682V9.36326H0.770996V5.63593ZM12.6985 0.0449219H16.6743V3.77226H12.6985V0.0449219ZM6.73473 0.0449219H10.7106V3.77226H6.73473V0.0449219ZM0.770996 0.0449219H4.74682V3.77226H0.770996V0.0449219Z" 
+                fill="var(--default-text, white)">
+          </path>
+        </svg>
+      </div>
+      
+      <ul class="dropdown-menu dropdown-menu-end p-3" 
+          [class.show]="isUserNavigationOpen" 
+          style="min-width: 350px;">
+        <div class="icon-grid">
+          <div class="icon-item" 
+               *ngFor="let menu of headerNavMenu" 
+               [class.disabled]="!menu.status"
+               (click)="menu.status && navigateBy(menu, menu.name)">
+            <i class="material-icons cursor-hand" [title]="menu.name">{{ menu.icon }}</i>
+            <div>{{ menu.name }}</div>
+          </div>
+        </div>
+      </ul>
+    </div>
+    <div class="user-header-divider"></div>
+  </div>
+
+  <!-- User Notifications -->
+  <div class="user-notification">
+    <div class="dropdown">
+      <div class="notification-icon" (click)="toggleUserAlertNotification()">
+        <svg width="18px" height="18px" viewBox="0 0 19 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8.22212 15.3403H11.4412C11.4412 15.7672 11.2716 16.1765 10.9697 16.4784C10.6679 16.7802 10.2585 16.9498 9.83164 16.9498C9.40477 16.9498 8.99538 16.7802 8.69354 16.4784C8.3917 16.1765 8.22212 15.7672 8.22212 15.3403ZM17.0745 13.7308V14.5355H2.58879V13.7308L4.19831 12.1212V7.29266C4.19831 4.7979 5.83198 2.6009 8.22212 1.89271V1.65933C8.22212 1.23246 8.3917 0.823067 8.69354 0.521223C8.99538 0.219379 9.40477 0.0498047 9.83164 0.0498047C10.2585 0.0498047 10.6679 0.219379 10.9697 0.521223C11.2716 0.823067 11.4412 1.23246 11.4412 1.65933V1.89271C13.8313 2.6009 15.465 4.7979 15.465 7.29266V12.1212L17.0745 13.7308ZM13.8555 7.29266C13.8555 6.22548 13.4315 5.20201 12.6769 4.4474C11.9223 3.69279 10.8988 3.26885 9.83164 3.26885C8.76446 3.26885 7.74099 3.69279 6.98638 4.4474C6.23177 5.20201 5.80783 6.22548 5.80783 7.29266V12.926H13.8555V7.29266ZM16.0685 1.00747L14.9258 2.15023C15.6065 2.82249 16.147 3.62322 16.5158 4.50598C16.8847 5.38874 17.0746 6.33594 17.0745 7.29266H18.684C18.684 4.93471 17.7505 2.66528 16.0685 1.00747ZM0.979263 7.29266H2.58879C2.58879 5.36123 3.36136 3.51028 4.7375 2.15023L3.59474 1.00747C2.76413 1.82959 2.10518 2.80858 1.65618 3.88756C1.20718 4.96654 0.977088 6.12399 0.979263 7.29266Z" 
+                fill="var(--default-text, white)">
+          </path>
+        </svg>
+        <span class="notification-badge" *ngIf="unreadMessages > 0">{{ unreadMessages }}</span>
+      </div>
+      
+      <ul class="dropdown-menu" [class.show]="isUserAlertOpen">
+        <div class="seeAll">
+          Last {{ unreadMessages }} Unread Notifications 
+          <a title="Notifications" (click)="userNotification()">See All</a>
+        </div>
+        
+        <div *ngFor="let item of unreadNotifications" class="unread-message-list">
+          <li>
+            <span class="notification-subject">{{ item.notificationMessageId.subject }}</span>
+            <span class="notification-message">{{ item.notificationMessageId.message }}</span>
+          </li>
+        </div>
+        
+        <div *ngIf="unreadNotifications.length === 0" class="no-notifications">
+          <li>
+            <span>No new notifications</span>
+          </li>
+        </div>
+      </ul>
+    </div>
+    <div class="user-header-divider"></div>
+  </div>
+
+  <!-- User Profile Dropdown -->
+  <div class="user-dropdown">
+    <div class="dropdown-toggle" (click)="toggleUserDropdown()">
+      <div class="profile-icon">{{ getUserInitials() }}</div>
+      <span class="username" *ngIf="authInfo?.user?.userName">{{ authInfo.user.userName }}</span>
+      <i class="material-icons cursor-hand">keyboard_arrow_down</i>
+    </div>
+    
+    <div class="dropdown-menu" [class.show]="isUserDropdownOpen">
+      <!-- User Profile Info -->
+      <div class="profile" *ngIf="authInfo?.user">
+        <div class="profile-pic">{{ getUserInitials() }}</div>
+        <div class="profile-info">
+          <div class="name">{{ authInfo.user.userName }}</div>
+          <div class="email">{{ authInfo.user.emailID }}</div>
+        </div>
+      </div>
+      
+      <!-- Theme Toggle -->
+      <div class="dropdown-item theme-toggle">
+        <span>Dark Mode</span>
+        <label class="switch">
+          <input type="checkbox" [checked]="isDarkMode" (change)="toggleDarkMode()">
+          <span class="slider"></span>
+        </label>
+      </div>
+      
+      <!-- Menu Items -->
+      <div class="dropdown-item" (click)="navigateToMyAccount()">
+        <i class="material-icons">account_circle</i>
+        <span>My Account</span>
+      </div>
+      
+      <div class="dropdown-item" (click)="navigateToAbout()">
+        <i class="material-icons">info</i>
+        <span>About</span>
+      </div>
+      
+      <div class="dropdown-item" (click)="navigateToSettings()">
+        <i class="material-icons">settings</i>
+        <span>Settings</span>
+      </div>
+      
+      <div class="dropdown-divider"></div>
+      
+      <div class="dropdown-item logout" (click)="userLogout()">
+        <i class="material-icons">logout</i>
+        <span>Sign Out</span>
+      </div>
+    </div>
+  </div>
+
+</div>

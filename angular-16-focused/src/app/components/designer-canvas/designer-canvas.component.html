@@ -1,0 +1,151 @@
+<!-- Designer Canvas Component -->
+<div class="designer-canvas-container">
+  
+  <!-- Canvas Toolbar -->
+  <div class="canvas-toolbar">
+    <div class="toolbar-section">
+      <button class="btn btn-sm" (click)="addComponent('chart')" title="Add Chart">
+        <i class="material-icons">bar_chart</i>
+        Chart
+      </button>
+      <button class="btn btn-sm" (click)="addComponent('text')" title="Add Text">
+        <i class="material-icons">text_fields</i>
+        Text
+      </button>
+      <button class="btn btn-sm" (click)="addComponent('image')" title="Add Image">
+        <i class="material-icons">image</i>
+        Image
+      </button>
+      <button class="btn btn-sm" (click)="addComponent('button')" title="Add Button">
+        <i class="material-icons">smart_button</i>
+        Button
+      </button>
+    </div>
+    
+    <div class="toolbar-section">
+      <button class="btn btn-sm" (click)="deleteSelected()" 
+              [disabled]="selectedObjects.length === 0" title="Delete Selected">
+        <i class="material-icons">delete</i>
+      </button>
+      <button class="btn btn-sm" (click)="duplicateSelected()" 
+              [disabled]="selectedObjects.length === 0" title="Duplicate Selected">
+        <i class="material-icons">content_copy</i>
+      </button>
+    </div>
+    
+    <div class="toolbar-section">
+      <button class="btn btn-sm" [class.active]="canvasConfig.showGrid" 
+              (click)="toggleGrid()" title="Toggle Grid">
+        <i class="material-icons">grid_on</i>
+      </button>
+    </div>
+    
+    <div class="toolbar-section zoom-controls">
+      <button class="btn btn-sm" (click)="zoomOut()" title="Zoom Out">
+        <i class="material-icons">zoom_out</i>
+      </button>
+      <span class="zoom-level">{{ (canvasConfig.zoomLevel * 100) | number:'1.0-0' }}%</span>
+      <button class="btn btn-sm" (click)="zoomIn()" title="Zoom In">
+        <i class="material-icons">zoom_in</i>
+      </button>
+      <button class="btn btn-sm" (click)="resetZoom()" title="Reset Zoom">
+        <i class="material-icons">center_focus_strong</i>
+      </button>
+      <button class="btn btn-sm" (click)="fitToWindow()" title="Fit to Window">
+        <i class="material-icons">fit_screen</i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Canvas Area -->
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div class="canvas" 
+           [style.width.px]="canvasConfig.width"
+           [style.height.px]="canvasConfig.height"
+           [style.transform]="'scale(' + canvasConfig.zoomLevel + ')'"
+           (mousedown)="onCanvasMouseDown($event)"
+           (mousemove)="onCanvasMouseMove($event)"
+           (mouseup)="onCanvasMouseUp($event)"
+           (wheel)="onCanvasWheel($event)">
+        
+        <!-- Grid Background -->
+        <div class="grid-background" 
+             *ngIf="canvasConfig.showGrid"
+             [style.background-size.px]="canvasConfig.gridSize + ' ' + canvasConfig.gridSize">
+        </div>
+        
+        <!-- Canvas Objects -->
+        <div *ngFor="let obj of canvasObjects; trackBy: trackByObjectId"
+             class="canvas-object"
+             [class.selected]="obj.selected"
+             [style.left.px]="obj.x"
+             [style.top.px]="obj.y"
+             [style.width.px]="obj.width"
+             [style.height.px]="obj.height"
+             (click)="selectObject(obj)">
+          
+          <!-- Chart Component -->
+          <div *ngIf="obj.type === 'chart'" class="component-chart">
+            <div class="chart-placeholder">
+              <i class="material-icons">bar_chart</i>
+              <span>{{ obj.properties?.title || 'Chart' }}</span>
+            </div>
+          </div>
+          
+          <!-- Text Component -->
+          <div *ngIf="obj.type === 'text'" class="component-text"
+               [style.font-size.px]="obj.properties?.fontSize || 14"
+               [style.font-family]="obj.properties?.fontFamily || 'Arial'"
+               [style.color]="obj.properties?.color || '#333333'"
+               [style.text-align]="obj.properties?.textAlign || 'left'">
+            {{ obj.properties?.text || 'Text Component' }}
+          </div>
+          
+          <!-- Image Component -->
+          <div *ngIf="obj.type === 'image'" class="component-image">
+            <img [src]="obj.properties?.src || '/assets/placeholder-image.svg'" 
+                 [alt]="obj.properties?.alt || 'Image'"
+                 [style.object-fit]="obj.properties?.fit || 'contain'">
+          </div>
+          
+          <!-- Button Component -->
+          <div *ngIf="obj.type === 'button'" class="component-button"
+               [style.background-color]="obj.properties?.backgroundColor || '#1976d2'"
+               [style.color]="obj.properties?.color || '#ffffff'">
+            {{ obj.properties?.text || 'Button' }}
+          </div>
+          
+          <!-- Selection Handles -->
+          <div *ngIf="obj.selected" class="selection-handles">
+            <div class="handle handle-nw"></div>
+            <div class="handle handle-ne"></div>
+            <div class="handle handle-sw"></div>
+            <div class="handle handle-se"></div>
+            <div class="handle handle-n"></div>
+            <div class="handle handle-s"></div>
+            <div class="handle handle-w"></div>
+            <div class="handle handle-e"></div>
+          </div>
+        </div>
+        
+        <!-- Selection Rectangle -->
+        <div *ngIf="selectionRectangle" 
+             class="selection-rectangle"
+             [style.left.px]="selectionRectangle.x"
+             [style.top.px]="selectionRectangle.y"
+             [style.width.px]="selectionRectangle.width"
+             [style.height.px]="selectionRectangle.height">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span>Objects: {{ canvasObjects.length }}</span>
+    <span>Selected: {{ selectedObjects.length }}</span>
+    <span>Canvas: {{ canvasConfig.width }}×{{ canvasConfig.height }}</span>
+    <span>Zoom: {{ (canvasConfig.zoomLevel * 100) | number:'1.0-0' }}%</span>
+  </div>
+</div>

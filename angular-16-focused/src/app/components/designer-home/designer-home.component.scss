@@ -1,0 +1,447 @@
+// Designer Home Component Styles - Based on original design
+
+.designer-home-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--background-color, #f5f5f5);
+}
+
+// Header Styles
+.bvz-header-home {
+  margin: 0;
+  
+  .bvz-header {
+    background: var(--primary-color, #1976d2);
+    color: white;
+    min-height: 64px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    
+    &.headerpadding {
+      padding-left: 20px;
+    }
+    
+    &.noheaderpadding {
+      padding-left: 16px;
+    }
+  }
+}
+
+// Logo Section
+.bvz-logo {
+  display: flex;
+  align-items: center;
+  
+  img {
+    max-height: 40px;
+    cursor: pointer;
+  }
+  
+  .nt-header-logo {
+    cursor: pointer;
+    color: white;
+  }
+}
+
+// Dashboard Tabs and Home Button
+.bvz-homeDesigner-dashboardTabDivs {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.bvz-home-designer {
+  margin-right: 16px;
+  
+  .file-button {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      text-decoration: none;
+      color: white;
+    }
+    
+    img {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+    }
+    
+    span {
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+}
+
+// Dashboard Tabs
+.dashboardTabsDiv {
+  flex: 1;
+  
+  .dashboardTabs {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    
+    .dashboardTab {
+      margin-right: 4px;
+      
+      &.active a {
+        background: rgba(255, 255, 255, 0.9);
+        color: #333;
+      }
+      
+      a {
+        display: block;
+        padding: 8px 16px;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        text-decoration: none;
+        border-radius: 4px 4px 0 0;
+        transition: background 0.2s;
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+          text-decoration: none;
+        }
+      }
+      
+      .defaulttab {
+        display: flex;
+        align-items: center;
+        
+        .name-dashboard-tab {
+          margin-right: 8px;
+          font-size: 13px;
+        }
+        
+        .close-dashboard-tab {
+          cursor: pointer;
+          font-size: 16px;
+          opacity: 0.7;
+          
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
+      
+      &.add-db a {
+        padding: 8px;
+        
+        i {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+}
+
+// User Menu and Actions
+.dashboardActionsDiv {
+  display: flex;
+  align-items: center;
+  
+  &.user-header-menu {
+    margin-left: auto;
+  }
+  
+  ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    
+    li {
+      margin-left: 8px;
+      
+      &.pull-right {
+        // Already handled by flex layout
+      }
+      
+      a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        color: white;
+        text-decoration: none;
+        transition: background 0.2s;
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+          text-decoration: none;
+        }
+        
+        i {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+}
+
+// Workspace Display
+#designerHomeWorkspace {
+  .file-button {
+    padding: 4px 8px;
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: white;
+    text-decoration: none;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+}
+
+// Main Content Area
+.designer-main-content {
+  flex: 1;
+  margin: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+// Main Menu Sidebar
+.main-menu-sidebar {
+  width: 300px;
+  background: white;
+  border-right: 1px solid #e0e0e0;
+  overflow-y: auto;
+  
+  .main-menu-content {
+    padding: 24px;
+    
+    h3 {
+      margin: 0 0 16px 0;
+      font-size: 24px;
+      color: #333;
+    }
+    
+    p {
+      color: #666;
+      margin-bottom: 24px;
+    }
+    
+    .menu-actions {
+      .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 12px;
+        padding: 12px;
+        text-align: left;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.2s;
+        
+        i {
+          margin-right: 8px;
+          vertical-align: middle;
+        }
+        
+        &.btn-primary {
+          background: #1976d2;
+          color: white;
+          
+          &:hover {
+            background: #1565c0;
+          }
+        }
+        
+        &.btn-secondary {
+          background: #f5f5f5;
+          color: #333;
+          
+          &:hover {
+            background: #e0e0e0;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Designer Canvas Area
+.designer-canvas-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  
+  &.full-width {
+    width: 100%;
+  }
+}
+
+// Welcome Screen
+.welcome-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: white;
+  
+  .welcome-content {
+    text-align: center;
+    max-width: 400px;
+    
+    h2 {
+      margin: 0 0 16px 0;
+      font-size: 32px;
+      color: #333;
+    }
+    
+    p {
+      color: #666;
+      margin-bottom: 32px;
+      font-size: 16px;
+    }
+    
+    .btn-lg {
+      padding: 16px 32px;
+      font-size: 16px;
+      background: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+      
+      &:hover {
+        background: #1565c0;
+      }
+      
+      i {
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+// Preview Area
+.bizVizPreview {
+  width: 100%;
+  height: 100%;
+  background: white;
+  
+  iframe {
+    border: none;
+  }
+}
+
+// Utility Classes
+.ht100per {
+  height: 100%;
+}
+
+.wd100per {
+  width: 100%;
+}
+
+.cursor-hand {
+  cursor: pointer;
+}
+
+.noselect {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .bvz-header {
+    flex-direction: column;
+    min-height: auto !important;
+    padding: 8px !important;
+  }
+  
+  .bvz-homeDesigner-dashboardTabDivs {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .dashboardActionsDiv {
+    margin-top: 8px;
+    justify-content: center;
+  }
+  
+  .main-menu-sidebar {
+    width: 100%;
+    position: absolute;
+    z-index: 1000;
+    height: calc(100vh - 64px);
+  }
+  
+  .designer-canvas-area.full-width {
+    width: 100%;
+  }
+}
+
+// Dark Theme Support
+[data-theme="dark"] {
+  .designer-home-container {
+    background: #121212;
+    color: white;
+  }
+  
+  .main-menu-sidebar {
+    background: #1e1e1e;
+    border-color: #333;
+    
+    .main-menu-content {
+      h3 {
+        color: white;
+      }
+      
+      p {
+        color: #ccc;
+      }
+      
+      .btn-secondary {
+        background: #333;
+        color: white;
+        
+        &:hover {
+          background: #444;
+        }
+      }
+    }
+  }
+  
+  .welcome-screen {
+    background: #1e1e1e;
+    
+    .welcome-content {
+      h2 {
+        color: white;
+      }
+      
+      p {
+        color: #ccc;
+      }
+    }
+  }
+}

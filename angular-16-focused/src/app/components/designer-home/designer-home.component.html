@@ -1,0 +1,234 @@
+<!-- Main Designer Home View - Based on DesignHomeView.html -->
+<div class="designer-home-container" (click)="onDocumentClick($event)">
+  
+  <!-- Header Section -->
+  <div id="header-home" class="row bvz-header-home">
+    <div id="header" class="bizviz-toolbar bizviz-header bvz-header" 
+         [class.headerpadding]="designerState?.dashboardTabs.length === 0"
+         [class.noheaderpadding]="designerState?.dashboardTabs.length !== 0">
+      
+      <!-- Logo Section -->
+      <div [class]="designerState?.dashboardTabs.length === 0 ? 'col-xs-3 col-sm-3 col-md-3 col-lg-2' : ''">
+        <div class="bvz-logo">
+          <div (click)="toggleMenu()">
+            <img [src]="brandConfig?.logo" 
+                 style="padding: 8px 0px 8px 0px;" 
+                 *ngIf="brandConfig?.appShortName !== 'BDB'" />
+            <div style="padding: 4px 0px 0px 0px;" *ngIf="brandConfig?.appShortName === 'BDB'">
+              <i class="material-icons cursor-hand nt-header-logo" 
+                 style="height:32px;width:60px">dashboard</i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Tabs and Home Button Section -->
+      <div [class]="designerState?.dashboardTabs.length === 0 ? 'col-xs-9 col-sm-9 col-md-9 col-lg-10 nolefpadding' : ''">
+        <div class="bvz-homeDesigner-dashboardTabDivs">
+          
+          <!-- Home Button -->
+          <div class="bvz-home-designer">
+            <a id="designerHomeIcon" class="file-button headerControlIcon" (click)="toggleMenu()">
+              <div *ngIf="!designerState?.isMainMenuVisible">
+                <img src="/assets/images/featureThumbs/nt-home.svg">
+                <span class="zero-border">Home</span>
+              </div>
+              <div *ngIf="designerState?.isMainMenuVisible">
+                <img src="/assets/images/featureThumbs/nt-home.svg">
+                <span>Dashboard Designer</span>
+              </div>
+            </a>
+          </div>
+
+          <!-- Dashboard Tabs -->
+          <div class="dashboardTabsDiv" 
+               [ngStyle]="designerState?.dashboardTabs.length === 0 ? {'width': '50px'} : {}">
+            <ul id="dashboardTabs" class="dashboardTabs">
+              
+              <!-- Individual Dashboard Tabs -->
+              <li class="dashboardTab active" 
+                  *ngFor="let dashboard of designerState?.dashboardTabs; let i = index" 
+                  [id]="'tab' + dashboard.id" 
+                  (click)="dashboardTabClick(dashboard.id)">
+                <a tabindex="-1" href="#" data-toggle="tab" aria-controls="profile" 
+                   class="ng-binding" aria-expanded="false">
+                  <div class="defaulttab">
+                    <span class="name-dashboard-tab">{{dashboard.name}}</span>
+                    <span class="close-dashboard-tab icon bd-close" 
+                          title="Close Dashboard" 
+                          (click)="closeDashboard(dashboard.id, i)">×</span>
+                  </div>
+                </a>
+              </li>
+
+              <!-- Add New Dashboard Tab -->
+              <li class="add-db dashboardTab" 
+                  *ngIf="(designerState?.dashboardTabs.length || 0) < 3">
+                <a tabindex="-1" href="#" (click)="createNewDashboard(true)">
+                  <div>
+                    <i class="material-icons cursor-hand" title="New Dashboard">add</i>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- User Menu and Actions (Right Side) -->
+        <div class="dashboardActionsDiv user-header-menu" 
+             style="padding: 6px;" 
+             *ngIf="designerState?.isMainMenuVisible">
+          
+          <!-- Workspace Info -->
+          <div style="display: inline;">
+            <div class="workspace_select"></div>
+            <a id="designerHomeWorkspace" class="file-button">
+              <div>
+                <span>Workspace : {{designerState?.selectedWorkspace.name}}</span>
+              </div>
+            </a>
+          </div>
+
+          <!-- User Menu Component -->
+          <app-main-menu></app-main-menu>
+        </div>
+
+        <!-- Dashboard Action Buttons -->
+        <div class="dashboardActionsDiv" 
+             *ngIf="(designerState?.dashboardTabs.length || 0) > 0">
+          <ul>
+            <!-- Preview Toggle -->
+            <li id="togglePreview" class="dashboardActionIcon pull-right" (click)="togglePreview()">
+              <a id="previewBtn" class="headerControlIcon" 
+                 *ngIf="!designerState?.isMainMenuVisible"
+                 [title]="previewLabel">
+                <i class="material-icons cursor-hand" [class]="previewIcon">
+                  {{ designerState?.previewMode ? 'edit' : 'visibility' }}
+                </i>
+              </a>
+            </li>
+
+            <!-- Save Dashboard -->
+            <li id="saveDashboard" class="dashboardActionIcon pull-right" 
+                *ngIf="!designerState?.isMainMenuVisible && !designerState?.previewMode" 
+                (click)="saveDashboard()">
+              <a id="saveBtn" class="headerControlIcon">
+                <i class="material-icons cursor-hand" title="Save Dashboard">save</i>
+              </a>
+            </li>
+
+            <!-- Save As Dashboard -->
+            <li id="saveAsDashboard" class="dashboardActionIcon pull-right" 
+                *ngIf="!designerState?.previewMode && designerState?.selectedDashboard?.json?.Dashboard?.backendId" 
+                (click)="openSaveAsDialog($event)">
+              <a class="headerControlIcon" *ngIf="!designerState?.isMainMenuVisible">
+                <i class="material-icons cursor-hand" title="Save to Another Workspace">content_copy</i>
+              </a>
+            </li>
+
+            <!-- Export Dashboard -->
+            <li id="exportDashboard" class="dashboardActionIcon pull-right" 
+                *ngIf="!designerState?.previewMode && !designerState?.isMainMenuVisible" 
+                (click)="exportCurrentDashboard()">
+              <a class="headerControlIcon">
+                <i class="material-icons cursor-hand" title="Save to local disk">download</i>
+              </a>
+            </li>
+
+            <!-- Responsive View Buttons -->
+            <li id="dashboardMobileView" class="dashboardActionIcon" 
+                *ngIf="!designerState?.previewMode && !designerState?.isMainMenuVisible" 
+                (click)="switchDashboardView('Mobile')">
+              <a class="headerControlIcon">
+                <i class="material-icons cursor-hand" title="Mobile">smartphone</i>
+              </a>
+            </li>
+
+            <li id="dashboardTabletView" class="dashboardActionIcon" 
+                *ngIf="!designerState?.previewMode && !designerState?.isMainMenuVisible" 
+                (click)="switchDashboardView('Tablet')">
+              <a class="headerControlIcon">
+                <i class="material-icons cursor-hand" title="Tablet">tablet</i>
+              </a>
+            </li>
+
+            <li id="dashboardDesktopView" class="dashboardActionIcon" 
+                *ngIf="!designerState?.previewMode && !designerState?.isMainMenuVisible" 
+                (click)="switchDashboardView('Desktop')">
+              <a class="headerControlIcon">
+                <i class="material-icons cursor-hand" title="Large Screen">desktop_windows</i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div id="designer-container" class="row designer-main-content">
+    
+    <!-- Main Menu Sidebar (when visible) -->
+    <div id="designer-toggle-menu" 
+         class="ht100per main-menu-sidebar"
+         *ngIf="designerState?.isMainMenuVisible">
+      <!-- Main menu content will be added here -->
+      <div class="main-menu-content">
+        <h3>Dashboard Designer</h3>
+        <p>Welcome to the Dashboard Designer. Create new dashboards or open existing ones.</p>
+        
+        <div class="menu-actions">
+          <button class="btn btn-primary" (click)="createNewDashboard(true)">
+            <i class="material-icons">add</i>
+            New Dashboard
+          </button>
+          
+          <button class="btn btn-secondary">
+            <i class="material-icons">folder_open</i>
+            Open Dashboard
+          </button>
+          
+          <button class="btn btn-secondary">
+            <i class="material-icons">template</i>
+            Templates
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Designer Canvas Area -->
+    <div id="designer-workarea" 
+         class="ht100per designer-canvas-area"
+         [class.full-width]="!designerState?.isMainMenuVisible">
+      
+      <!-- Show canvas when dashboard is selected -->
+      <app-designer-canvas 
+        *ngIf="designerState?.selectedDashboard && !designerState?.previewMode"
+        [dashboard]="designerState.selectedDashboard">
+      </app-designer-canvas>
+
+      <!-- Show preview when in preview mode -->
+      <div id="bizVizPreview" 
+           class="bizVizPreview"
+           *ngIf="designerState?.previewMode">
+        <iframe id="dashboardViewerFrame" 
+                class="wd100per ht100per"
+                [src]="'/preview/' + designerState?.selectedDashboard?.id">
+        </iframe>
+      </div>
+
+      <!-- Welcome screen when no dashboard is open -->
+      <div class="welcome-screen" 
+           *ngIf="!designerState?.selectedDashboard && !designerState?.isMainMenuVisible">
+        <div class="welcome-content">
+          <h2>Welcome to Dashboard Designer</h2>
+          <p>Create beautiful, interactive dashboards with ease.</p>
+          <button class="btn btn-primary btn-lg" (click)="createNewDashboard(true)">
+            <i class="material-icons">add</i>
+            Create New Dashboard
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

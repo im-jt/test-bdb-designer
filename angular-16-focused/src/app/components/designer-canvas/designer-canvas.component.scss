@@ -1,0 +1,372 @@
+// Designer Canvas Component Styles
+
+.designer-canvas-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #f5f5f5;
+}
+
+// Canvas Toolbar
+.canvas-toolbar {
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  
+  .toolbar-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    &.zoom-controls {
+      margin-left: auto;
+      
+      .zoom-level {
+        font-size: 12px;
+        min-width: 40px;
+        text-align: center;
+        color: #666;
+      }
+    }
+  }
+  
+  .btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #333;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+    
+    &:hover:not(:disabled) {
+      background: #f5f5f5;
+      border-color: #ccc;
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    &.active {
+      background: #1976d2;
+      color: white;
+      border-color: #1976d2;
+    }
+    
+    i {
+      font-size: 16px;
+    }
+  }
+}
+
+// Canvas Area
+.canvas-area {
+  flex: 1;
+  overflow: auto;
+  background: #e0e0e0;
+  position: relative;
+}
+
+.canvas-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  padding: 40px;
+}
+
+.canvas {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  transform-origin: center;
+  cursor: crosshair;
+}
+
+// Grid Background
+.grid-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(to right, #ddd 1px, transparent 1px),
+    linear-gradient(to bottom, #ddd 1px, transparent 1px);
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+// Canvas Objects
+.canvas-object {
+  position: absolute;
+  cursor: move;
+  border: 1px solid transparent;
+  
+  &:hover {
+    border-color: #2196f3;
+  }
+  
+  &.selected {
+    border-color: #1976d2;
+    z-index: 100;
+  }
+}
+
+// Component Styles
+.component-chart {
+  width: 100%;
+  height: 100%;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  .chart-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #666;
+    
+    i {
+      font-size: 32px;
+    }
+    
+    span {
+      font-size: 12px;
+      font-weight: 500;
+    }
+  }
+}
+
+.component-text {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  word-wrap: break-word;
+  overflow: hidden;
+}
+
+.component-image {
+  width: 100%;
+  height: 100%;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ddd;
+  }
+}
+
+.component-button {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+// Selection Handles
+.selection-handles {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  pointer-events: none;
+  
+  .handle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #1976d2;
+    border: 1px solid white;
+    border-radius: 50%;
+    pointer-events: all;
+    cursor: pointer;
+    
+    &.handle-nw {
+      top: -4px;
+      left: -4px;
+      cursor: nw-resize;
+    }
+    
+    &.handle-ne {
+      top: -4px;
+      right: -4px;
+      cursor: ne-resize;
+    }
+    
+    &.handle-sw {
+      bottom: -4px;
+      left: -4px;
+      cursor: sw-resize;
+    }
+    
+    &.handle-se {
+      bottom: -4px;
+      right: -4px;
+      cursor: se-resize;
+    }
+    
+    &.handle-n {
+      top: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      cursor: n-resize;
+    }
+    
+    &.handle-s {
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      cursor: s-resize;
+    }
+    
+    &.handle-w {
+      left: -4px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: w-resize;
+    }
+    
+    &.handle-e {
+      right: -4px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: e-resize;
+    }
+  }
+}
+
+// Selection Rectangle
+.selection-rectangle {
+  position: absolute;
+  border: 1px dashed #1976d2;
+  background: rgba(25, 118, 210, 0.1);
+  pointer-events: none;
+}
+
+// Status Bar
+.status-bar {
+  background: #f0f0f0;
+  border-top: 1px solid #e0e0e0;
+  padding: 4px 16px;
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: #666;
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .canvas-toolbar {
+    padding: 4px 8px;
+    
+    .toolbar-section {
+      gap: 4px;
+      
+      &.zoom-controls {
+        margin-left: 0;
+        order: -1;
+        width: 100%;
+        justify-content: center;
+      }
+    }
+    
+    .btn {
+      padding: 4px 8px;
+      font-size: 11px;
+      
+      i {
+        font-size: 14px;
+      }
+    }
+  }
+  
+  .canvas-wrapper {
+    padding: 20px 10px;
+  }
+  
+  .status-bar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+// Dark Theme Support
+[data-theme="dark"] {
+  .designer-canvas-container {
+    background: #121212;
+  }
+  
+  .canvas-toolbar {
+    background: #1e1e1e;
+    border-color: #333;
+    
+    .btn {
+      background: #2d2d2d;
+      color: white;
+      border-color: #444;
+      
+      &:hover:not(:disabled) {
+        background: #3d3d3d;
+        border-color: #555;
+      }
+      
+      &.active {
+        background: #1976d2;
+        border-color: #1976d2;
+      }
+    }
+  }
+  
+  .canvas-area {
+    background: #0d0d0d;
+  }
+  
+  .canvas {
+    background: #1e1e1e;
+  }
+  
+  .component-chart {
+    background: #2d2d2d;
+    border-color: #444;
+    
+    .chart-placeholder {
+      color: #ccc;
+    }
+  }
+  
+  .component-image img {
+    border-color: #444;
+  }
+  
+  .status-bar {
+    background: #1e1e1e;
+    border-color: #333;
+    color: #ccc;
+  }
+}
